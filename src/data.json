@@ -1,0 +1,91 @@
+{
+    "animais": {
+        "carnivoros": {
+            "LEAO": {
+                "tamanho": 3,
+                "bioma": [
+                    "SAVANA"
+                ]
+            },
+            "LEOPARDO": {
+                "tamanho": 2,
+                "bioma": [
+                    "SAVANA"
+                ]
+            },
+            "CROCODILO": {
+                "tamanho": 3,
+                "bioma": [
+                    "RIO"
+                ]
+            }
+        },
+        "outros": {
+            "MACACO": {
+                "tamanho": 1,
+                "bioma": [
+                    "SAVANA",
+                    "FLORESTA"
+                ]
+            },
+            "GAZELA": {
+                "tamanho": 2,
+                "bioma": [
+                    "SAVANA"
+                ]
+            },
+            "HIPOPOTAMO": {
+                "tamanho": 4,
+                "bioma": [
+                    "SAVANA",
+                    "RIO"
+                ]
+            }
+        }
+    },
+    "recintos": {
+        "1": {
+            "bioma": [
+                "SAVANA"
+            ],
+            "especie": "MACACO",
+            "total": 10,
+            "existente": 3
+        },
+        "2": {
+            "bioma": [
+                "FLORESTA"
+            ],
+            "especie": "VAZIO",
+            "total": 5,
+            "existente": 0
+        },
+        "3": {
+            "bioma": [
+                "SAVANA",
+                "RIO"
+            ],
+            "especie": [
+                "GAZELA"
+            ],
+            "total": 7,
+            "existente": 2
+        },
+        "4": {
+            "bioma": [
+                "RIO"
+            ],
+            "especie": "VAZIO",
+            "total": 8,
+            "existente": 0
+        },
+        "5": {
+            "bioma": [
+                "SAVANA"
+            ],
+            "especie": "LEAO",
+            "total": 9,
+            "existente": 3
+        }
+    }
+}
