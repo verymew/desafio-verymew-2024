@@ -14,6 +14,27 @@ class RecintosZoo {
             return { erro: "Quantidade inválida", recintosViaveis: null };
         }
 
+        for (let id in this.#recintos) {
+            let espacoLivre = this.#recintos[id].total - this.#recintos[id].existente - quantidadeAnimal;
+            if (espacoLivre <= 0) {
+                continue;
+            }
+
+            // Função que verifica se o animal precisa de companhia.
+            if (animalEscolhidoOutro.necessidade == "COMPANHIA" && quantidade <= 1 && this.#recintos[id].existente == 0) {
+                continue;
+            }
+
+            if (animal in this.#animais.carnivoros) {
+                if(this.verificarEspecieRecinto){
+                    
+                }
+            } else {
+                if (!this.verificarEspecieRecinto(animal)) {
+                    quantidadeAnimal++;
+                }
+            }
+        }
         // Sessão que verifica animais carnívoros.
         if (animal in this.#animais.carnivoros) {
             let animalEscolhidoCarnivoro = this.#animais.carnivoros[animal];
@@ -23,7 +44,7 @@ class RecintosZoo {
                     // Função que verifica se é da mesma espécie. Carnívoros só podem ficar com os da mesma espécie.
                     if (animal == this.#recintos[id].especie || this.#recintos[id].especie == "VAZIO") {
                         let quantidadeAnimal = quantidade * animalEscolhidoCarnivoro.tamanho;
-                        let espacoLivre = this.#recintos[id].total - this.#recintos[id].existente - quantidadeAnimal;   
+                        let espacoLivre = this.#recintos[id].total - this.#recintos[id].existente - quantidadeAnimal;
                         if (espacoLivre >= 0) {
                             this.#recintosViaveis.push(`Recinto ${id} (espaço livre: ${espacoLivre} total: ${this.#recintos[id].total})`);
                         }
@@ -31,7 +52,6 @@ class RecintosZoo {
                 }
             }
         }
-
         // Sessão que verifica animais que não são carnívoros.
         if (animal in this.#animais.outros) {
             let animalEscolhidoOutro = this.#animais.outros[animal];
@@ -39,7 +59,7 @@ class RecintosZoo {
                 // Função que verifica a compatibilidade de biomas entre o animal e o recinto.
                 if (animalEscolhidoOutro.bioma.some(bioma => this.#recintos[id].bioma.includes(bioma)) && !(this.#recintos[id].especie in this.#animais.carnivoros)) {
                     let quantidadeAnimal = quantidade * animalEscolhidoOutro.tamanho;
-                    if (animal != this.#recintos[id].especie && this.#recintos[id].especie != "VAZIO") {
+                    if (!this.verificarEspecieRecinto(animal)) {
                         quantidadeAnimal++;
                     }
                     let espacoLivre = this.#recintos[id].total - this.#recintos[id].existente - quantidadeAnimal;
@@ -64,11 +84,20 @@ class RecintosZoo {
             }
         }
 
+        //função para verificar se a especie do recinto é carnivora.
+
         if (this.#recintosViaveis.length == 0) {
             return { erro: "Não há recinto viável", recintosViaveis: null };
         }
 
         return { recintosViaveis: this.#recintosViaveis };
+    }
+
+    verificarEspecieRecinto(animal){
+        if(animal == this.#recintos[id].especie || this.#recintos[id].especie == "VAZIO"){
+            return true;
+        } 
+        return false;
     }
 }
 
