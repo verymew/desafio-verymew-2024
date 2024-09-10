@@ -15,76 +15,42 @@ class RecintosZoo {
         }
 
         for (let id in this.#recintos) {
+            let animalEscolhido = this.#animais[animal];
+            let quantidadeAnimal = quantidade * animalEscolhido.tamanho;
             let espacoLivre = this.#recintos[id].total - this.#recintos[id].existente - quantidadeAnimal;
-            if (espacoLivre <= 0) {
+            if (espacoLivre < 0) {
                 continue;
             }
 
             // Função que verifica se o animal precisa de companhia.
-            if (animalEscolhidoOutro.necessidade == "COMPANHIA" && quantidade <= 1 && this.#recintos[id].existente == 0) {
+            if (animalEscolhido.necessidade == "COMPANHIA" && quantidade <= 1 && this.#recintos[id].existente == 0) {
+                continue;
+            }
+            //Função que verifica compatibilidade do animal com o bioma do recinto.
+            if(!(animalEscolhido.bioma.some(bioma => this.#recintos[id].bioma.includes(bioma)))){
                 continue;
             }
 
             if (animal in this.#animais.carnivoros) {
-                if(this.verificarEspecieRecinto){
-                    
-                }
-            } else {
-                if (!this.verificarEspecieRecinto(animal)) {
-                    quantidadeAnimal++;
-                }
-            }
-        }
-        // Sessão que verifica animais carnívoros.
-        if (animal in this.#animais.carnivoros) {
-            let animalEscolhidoCarnivoro = this.#animais.carnivoros[animal];
-            for (let id in this.#recintos) {
-                // Função que verifica a compatibilidade de biomas entre o animal e o recinto.
-                if (animalEscolhidoCarnivoro.bioma.some(bioma => this.#recintos[id].bioma.includes(bioma))) {
-                    // Função que verifica se é da mesma espécie. Carnívoros só podem ficar com os da mesma espécie.
-                    if (animal == this.#recintos[id].especie || this.#recintos[id].especie == "VAZIO") {
-                        let quantidadeAnimal = quantidade * animalEscolhidoCarnivoro.tamanho;
-                        let espacoLivre = this.#recintos[id].total - this.#recintos[id].existente - quantidadeAnimal;
-                        if (espacoLivre >= 0) {
-                            this.#recintosViaveis.push(`Recinto ${id} (espaço livre: ${espacoLivre} total: ${this.#recintos[id].total})`);
-                        }
-                    }
-                }
-            }
-        }
-        // Sessão que verifica animais que não são carnívoros.
-        if (animal in this.#animais.outros) {
-            let animalEscolhidoOutro = this.#animais.outros[animal];
-            for (let id in this.#recintos) {
-                // Função que verifica a compatibilidade de biomas entre o animal e o recinto.
-                if (animalEscolhidoOutro.bioma.some(bioma => this.#recintos[id].bioma.includes(bioma)) && !(this.#recintos[id].especie in this.#animais.carnivoros)) {
-                    let quantidadeAnimal = quantidade * animalEscolhidoOutro.tamanho;
-                    if (!this.verificarEspecieRecinto(animal)) {
-                        quantidadeAnimal++;
-                    }
-                    let espacoLivre = this.#recintos[id].total - this.#recintos[id].existente - quantidadeAnimal;
-                    if (espacoLivre <= 0) {
-                        continue;
-                    }
-
-                    // Função específica para o hipopótamo.
-                    if (animalEscolhidoOutro.necessidade == "BIOMA") {
-                        if (animalEscolhidoOutro.bioma.every(bioma => this.#recintos[id].bioma.includes(bioma)) || (this.#recintos[id].especie == "VAZIO")) {
-                            this.#recintosViaveis.push(`Recinto ${id} (espaço livre: ${espacoLivre} total: ${this.#recintos[id].total})`);
-                        }
-                        continue;
-                    }
-                    // Função que verifica se o animal precisa de companhia.
-                    if (animalEscolhidoOutro.necessidade == "COMPANHIA" && quantidade <= 1 && this.#recintos[id].existente == 0) {
-                        continue;
-                    }
-
+                if(this.recintoCarnivoro(id) || this.#recintos[id].especie == "VAZIO"){
                     this.#recintosViaveis.push(`Recinto ${id} (espaço livre: ${espacoLivre} total: ${this.#recintos[id].total})`);
                 }
+            } else {
+                if(this.recintoCarnivoro(id)){
+                    continue;
+                }
+                if (animal != this.#recintos[id].especie) {
+                    quantidadeAnimal++;
+                }
+                if (animalEscolhido.necessidade == "BIOMA") {
+                    if (animalEscolhido.bioma.every(bioma => this.#recintos[id].bioma.includes(bioma)) || (this.#recintos[id].especie == "VAZIO")) {
+                        this.#recintosViaveis.push(`Recinto ${id} (espaço livre: ${espacoLivre} total: ${this.#recintos[id].total})`);
+                    }
+                    continue;
+                }
+                this.#recintosViaveis.push(`Recinto ${id} (espaço livre: ${espacoLivre} total: ${this.#recintos[id].total})`);
             }
         }
-
-        //função para verificar se a especie do recinto é carnivora.
 
         if (this.#recintosViaveis.length == 0) {
             return { erro: "Não há recinto viável", recintosViaveis: null };
@@ -93,8 +59,9 @@ class RecintosZoo {
         return { recintosViaveis: this.#recintosViaveis };
     }
 
-    verificarEspecieRecinto(animal){
-        if(animal == this.#recintos[id].especie || this.#recintos[id].especie == "VAZIO"){
+    ///Verificar se é carnivoro ou vazio
+    recintoCarnivoro(id){
+        if(this.#recintos[id].especie in this.#animais.carnivoros){
             return true;
         } 
         return false;
