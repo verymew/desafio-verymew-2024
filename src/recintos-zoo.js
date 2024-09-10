@@ -44,6 +44,7 @@
                     if (this.#recintos[id].especie !== "VAZIO" && this.#recintos[id].especie !== animal) {
                         espacoLivre--;
                     }
+                    //Função que verifica se o recinto está vazio ou se possui todos os biomas necessários.
                     if (animalEscolhido.necessidade == "BIOMA") {
                         if (animalEscolhido.bioma.every(bioma => this.#recintos[id].bioma.includes(bioma)) || (this.#recintos[id].especie == "VAZIO")) {
                             this.#recintosViaveis.push(`Recinto ${id} (espaço livre: ${espacoLivre} total: ${this.#recintos[id].total})`);
@@ -62,7 +63,7 @@
         }
         ///Função que verifica se Recinto é carnivoro
         isRecintoCarnivoro(id) { return this.#recintos[id].especie in this.#animais.carnivoros; }
-    
+        //Função verifica se o animal é carnivoro 
         isCarnivoro(animal) { if (animal in this.#animais.carnivoros) { return "carnivoros" } else { return "outros" } }
     }
 
