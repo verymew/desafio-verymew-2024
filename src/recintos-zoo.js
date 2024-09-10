@@ -24,7 +24,7 @@ class RecintosZoo {
                     //Função que verifica se é da mesma espécie. Carnívoros só podem ficar com os da mesma espécie.
                     if (animal == recintos[id].especie || recintos[id].especie == "VAZIO") {
                         let quantidadeAnimal = quantidade * animalEscolhidoCarnivoro.tamanho;
-                        let espacoLivre = recintos[id].total - recintos[id].existente - quantidadeAnimal;
+                        let espacoLivre = recintos[id].total - recintos[id].existente - quantidadeAnimal;   
                         if (espacoLivre >= 0) {
                             this.#recintosViaveis.push(`Recinto ${id} (espaço livre: ${espacoLivre} total: ${recintos[id].total})`);
                         };
@@ -44,16 +44,26 @@ class RecintosZoo {
                         quantidadeAnimal++;
                     };
                     let espacoLivre = recintos[id].total - recintos[id].existente - quantidadeAnimal;
-                    //Função específica para o hipopotamo, que só pode ficar em recintos com RIO e SAVANA. 
-                    if (animal == "HIPOPOTAMO") {
-                        if (animalEscolhidoOutro.bioma.every(bioma => recintos[id].bioma.includes(bioma))) {
+                    if (espacoLivre <= 0) {
+                        continue;
+                    };
+
+                    //Função específica para o hipopotamo.
+                    if (animalEscolhidoOutro.necessidade == "BIOMA") {
+                        if (animalEscolhidoOutro.bioma.every(bioma => recintos[id].bioma.includes(bioma)) || (recintos[id].especie == "VAZIO")) {
                             this.#recintosViaveis.push(`Recinto ${id} (espaço livre: ${espacoLivre} total: ${recintos[id].total})`);
                         };
                         continue;
                     };
-                    if(espacoLivre >= 0){
-                        this.#recintosViaveis.push(`Recinto ${id} (espaço livre: ${espacoLivre} total: ${recintos[id].total})`)
+                    //Função que verifica se o animal precisa de companhia.
+                    if (animalEscolhidoOutro.necessidade == "COMPANHIA"
+                        && quantidade <= 1
+                        && recintos[id].existente == 0
+                    ) {
+                        continue;
                     };
+
+                    this.#recintosViaveis.push(`Recinto ${id} (espaço livre: ${espacoLivre} total: ${recintos[id].total})`)
                 };
             };
         };
