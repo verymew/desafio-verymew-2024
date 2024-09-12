@@ -33,7 +33,7 @@
                     continue;
                 }
 
-                if (animal in this.#animais.carnivoros) {
+                if (animal in this.#animais.carnivoros ) {
                     if (this.isRecintoCarnivoro(id) || this.#recintos[id].especie == "VAZIO") {
                         this.#recintosViaveis.push(`Recinto ${id} (espaço livre: ${espacoLivre} total: ${this.#recintos[id].total})`);
                     }
@@ -57,7 +57,7 @@
 
             if (this.#recintosViaveis.length == 0) {
                 return { erro: "Não há recinto viável", recintosViaveis: null };
-            }
+            } 
 
             return { recintosViaveis: this.#recintosViaveis };
         }
